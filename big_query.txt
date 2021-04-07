@@ -1,0 +1,21 @@
+SELECT s.sex, s.age_group, COUNT(*) AS Total_cases,
+    SUM(CASE s.death_yn
+        WHEN 'Yes' THEN 1
+        ELSE 0
+        END) AS Total_deaths,
+    EXTRACT(MONTH FROM s.cdc_case_earliest_dt_) AS Month,
+    EXTRACT(YEAR FROM s.cdc_case_earliest_dt_) AS Year,
+    CASE s.medcond_yn
+        WHEN 'Yes' THEN 'Yes'
+        ELSE 'No'
+        END AS Medcond,
+    CASE s.race_ethnicity_combined
+        WHEN 'Black, Non-Hispanic' THEN 'Black'
+        WHEN 'Hispanic/Latino' THEN 'Hispanic'
+        WHEN 'White, Non-Hispanic' THEN 'White'
+        WHEN 'Asian, Non-Hispanic' THEN 'Asian'
+        ELSE 'Other/Missing'
+        END As Race_ethnicity
+FROM `ENTER TABLE INFORMATION` AS s
+GROUP BY Race_ethnicity, s.sex, s.age_group, Year, Month, Medcond
+ORDER BY s.age_group, s.sex, Year, Month
